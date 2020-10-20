@@ -4,6 +4,7 @@ import ContactForm from './ContactForm.js'
 import Filter from './Filter.js'
 import ContactList from './ContactList.js'
 
+
 // const INITIAL_STATE = {
 //   contacts: [],
 //   name: '',
@@ -25,8 +26,7 @@ const INITIAL_STATE = {
 
 class App extends Component {
 
-  state = { ...INITIAL_STATE };
-  
+  state = { ...INITIAL_STATE };  
   
   reset = () => {
     this.setState({ name: '', number: '' })
@@ -36,15 +36,19 @@ class App extends Component {
     const { name, value } = event.target;  
     this.setState({ [name]: value })
   };
+
+  isExistContact = () => {
+    const { name, contacts } = this.state;
+    return contacts.some((contact) => contact.name === name)
+  }
+    
   
   onSubmit = event => {
     event.preventDefault();
 
-    const { name, contacts } = this.state;
+    const { name } = this.state;
 
-    const isExistContact = contacts.some((contact) => contact.name === name)
-
-    isExistContact
+    this.isExistContact()
       ? alert(`${name} contact already exists`)
       : this.setState(({ name, contacts, number }) => {
         return name && { contacts: [...contacts, { name, id: uuidv4(), number }] }
@@ -52,6 +56,15 @@ class App extends Component {
           
     this.reset();
   };
+
+  onRemove = idToRemove => {
+    const { contacts } = this.state;
+    this.setState({
+      contacts: contacts.filter(({id}) => id !== idToRemove)
+    })
+  }
+
+  
 
   render() {
     const { name, contacts, number, filter } = this.state;
@@ -63,17 +76,19 @@ class App extends Component {
           number={number}
           onSubmit={this.onSubmit}
           onChange={this.onChange}
+          contacts={contacts}
         />
 
         <h2>Contacts</h2>
         <Filter
           filter={filter}
-          onChange={this.onChange}
-          
+          onChange={this.onChange}          
         />
         <ContactList
           filter={filter}
-          contacts={contacts} />
+          contacts={contacts}
+          onRemove={this.onRemove}
+        />
       </div>
   );
   }
