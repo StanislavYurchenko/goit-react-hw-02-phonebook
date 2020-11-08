@@ -8,13 +8,11 @@ class App extends Component {
 
   state = {
     contacts: [],
-    name: '',
-    number: '',
     filter: '',
-   };  
-  
+  };
+
   onChange = event => {
-    const { name, value } = event.target;  
+    const { name, value } = event.target;
     this.setState({ [name]: value })
   };
 
@@ -22,21 +20,21 @@ class App extends Component {
     const { contacts } = this.state;
     return contacts.some((contact) => contact.name === name)
   }
-    
+
   addContact = ({ name, number, id }) => {
     const newContact = { name, number, id };
 
     this.setState(({ contacts }) => {
       return name && { contacts: [...contacts, newContact] }
-    })      
+    })
   }
-            
+
   onRemove = idToRemove => {
     const { contacts } = this.state;
     this.setState({
-      contacts: contacts.filter(({id}) => id !== idToRemove)
+      contacts: contacts.filter(({ id }) => id !== idToRemove)
     })
-  }  
+  }
 
   render() {
     const { contacts, filter } = this.state;
@@ -51,7 +49,7 @@ class App extends Component {
         <H2>Contacts</H2>
         <Filter
           filter={filter}
-          onChange={this.onChange}          
+          onChange={this.onChange}
         />
         <ContactList
           filter={filter}
@@ -59,7 +57,7 @@ class App extends Component {
           onRemove={this.onRemove}
         />
       </Container>
-  );
+    );
   }
 }
 
